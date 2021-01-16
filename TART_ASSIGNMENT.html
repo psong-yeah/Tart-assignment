@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <title>tart-assignment</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+
+
+    <style type="text/css">
+
+        table {
+            border: 1px solid;
+            border-collapse: collapse;
+        }
+
+        td,
+        th {
+            padding: 10px;
+            border: 1px solid;
+        }
+
+        .urgent {
+            color: red;
+        }
+    </style>
+
+    <script>
+        function q1() {
+            $('#names-q1').empty()
+            $.ajax({
+                type: "GET",
+                url: "http://openapi.seoul.go.kr:8088/6d4d776b466c656533356a4b4b5872/json/bikeList/1/1000",
+                data: {},
+                success: function (response) {
+                    let rows = response['rentBikeStatus']['row']
+                    for (let i = 0; i < rows.length; i++) {
+                        let name = rows[i]['stationName']
+                        let rack = rows[i]['rackTotCnt']
+                        let bike = rows[i]['parkingBikeTotCnt']
+
+                        let temp_html = ``
+
+                        if (bike < 5) {
+                            temp_html = `<tr class = "urgent">
+                                               <td>${name}</td>
+                                               <td>${rack}</td>
+                                               <td>${bike}</td>
+                                         </tr>`
+                        } else {
+                            temp_html = `<tr>
+                                               <td>${name}</td>
+                                               <td>${rack}</td>
+                                               <td>${bike}</td>
+                                         </tr>`
+                        }
+                        $('#table-ddareungi').append(temp_html)
+                    }
+                }
+            })
+            $.ajax({
+                type: "GET",
+                url: "http://openapi.seoul.go.kr:8088/6d4d776b466c656533356a4b4b5872/json/bikeList/1001/2000",
+                data: {},
+                success: function (response) {
+                    let rows = response['rentBikeStatus']['row']
+                    for (let i = 0; i < rows.length; i++) {
+                        let name = rows[i]['stationName']
+                        let rack = rows[i]['rackTotCnt']
+                        let bike = rows[i]['parkingBikeTotCnt']
+
+                        let temp_html = ``
+
+                        if (bike < 5) {
+                            temp_html = `<tr class = "urgent">
+                                               <td>${name}</td>
+                                               <td>${rack}</td>
+                                               <td>${bike}</td>
+                                         </tr>`
+                        } else {
+                            temp_html = `<tr>
+                                               <td>${name}</td>
+                                               <td>${rack}</td>
+                                               <td>${bike}</td>
+                                         </tr>`
+                        }
+                        $('#table-ddareungi').append(temp_html)
+                    }
+                }
+            })
+            $.ajax({
+                type: "GET",
+                url: "http://openapi.seoul.go.kr:8088/6d4d776b466c656533356a4b4b5872/json/bikeList/2001/3000",
+                data: {},
+                success: function (response) {
+                    let rows = response['rentBikeStatus']['row']
+                    for (let i = 0; i < rows.length; i++) {
+                        let name = rows[i]['stationName']
+                        let rack = rows[i]['rackTotCnt']
+                        let bike = rows[i]['parkingBikeTotCnt']
+                        let lat = rows[i]['stationLatitude']
+                        let long = rows[i]['stationLongitude']
+
+                        let temp_html = ``
+
+                        if (bike < 5) {
+                            temp_html = `<tr class = "urgent">
+                                               <td>${name}</td>
+                                               <td>${rack}</td>
+                                               <td>${bike}</td>
+                                         </tr>`
+                        } else {
+                            temp_html = `<tr>
+                                               <td>${name}</td>
+                                               <td>${rack}</td>
+                                               <td>${bike}</td>
+                                         </tr>`
+                        }
+                        $('#table-ddareungi').append(temp_html)
+
+                    }
+                }
+            })
+
+        }
+    </script>
+
+
+</head>
+
+<body>
+    <div id="map" style="width:60%;height:500px;margin:auto;"></div>
+    <script src="https://dapi.kakao.com/v2/maps/sdk.js?appkey=efc5c6df2b3696046f1e54fb56bd6fe9"></script>
+    <script>
+        let mapContainer = document.getElementById('map'),
+            mapOption = {
+                center: new kakao.maps.LatLng(37.54171753, 127.08016968),
+                level: 7,
+                mapTypeId: kakao.maps.MapTypeId.ROADMAP
+            };
+        let map = new kakao.maps.Map(mapContainer, mapOption);
+        let marker = new kakao.maps.Marker({
+            position: new kakao.maps.LatLng(37.54171753, 127.08016968),
+            map: map
+        });
+
+        let iwContent = '<div style="padding:24px;" id="content">건국대학교 과학관(이과대) 앞, 0</div>',
+            iwPosition = new kakao.maps.LatLng(37.54171753, 127.08016968),
+            iwRemoveable = true;
+
+        let infowindow = new kakao.maps.InfoWindow({
+            map: map,
+            position: iwPosition,
+            content: iwContent,
+            removable: iwRemoveable
+        });
+    </script>
+
+
+    <hr/>
+
+    <button onclick="q1()">업데이트</button>
+    <hr/>
+
+    <table>
+        <thead>
+        <tr>
+            <td>정류장 위치</td>
+            <td>총 거치대 수</td>
+            <td>현재 남아있는 따릉이 수</td>
+        </tr>
+        </thead>
+        <tbody id="table-ddareungi">
+        </tbody>
+    </table>
+</body>
+
+</html>
